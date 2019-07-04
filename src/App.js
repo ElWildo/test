@@ -4,6 +4,8 @@ import ReactLoading from 'react-loading';
 import axios from 'axios';
 import api from './api';
 
+
+//added few line for styling spaces and header
 const styles = {
   app: {
     display: 'flex',
@@ -26,11 +28,8 @@ class TodoCoponent extends React.Component {
   }
 
   render() {
-    let id = this.props.todo.id;
+    //storing needed data and displaying it
     let title = this.props.todo.title;
-    let completed = this.props.todo.completed;
-    let userID = this.props.todo.userID;
-    console.log(this.props.author)
     return (
       <li>
         {title} ({this.props.author})
@@ -50,11 +49,13 @@ class Tabletodolist extends React.Component {
     };
   }
 
+  // creating a function to use onChange option
   change = (event) =>{
       this.setState({value: event.target.value});
   }
 
   componentDidMount() {
+    // stroring api data
     axios
       .get(api.todos)
       .then(response => {
@@ -66,7 +67,7 @@ class Tabletodolist extends React.Component {
         console.log(error);
       });
 
-      axios
+    axios
       .get(api.users)
       .then(response => {
         // handle success 
@@ -79,7 +80,6 @@ class Tabletodolist extends React.Component {
   }
 
   render() {
-    // console.log(this.state.todo);
     return (
       <div>
         <div style = {styles.headline}>
@@ -91,26 +91,32 @@ class Tabletodolist extends React.Component {
             <option value="All">All</option>
           </select>
         </div>
+        {/* checking if data is loaded or not */}
         { this.state.showSpin ? <ReactLoading color="#111e6c" type="spin" /> : null }
+        {/* render only what option value requires 
+        if for each value
+        filter on todos for value
+        map todos to return a todoComponent containing:
+        todos.autor and a filtered author list (throug id) returning a joined array */}
         { this.state.value == 'Active' &&
         this.state.todo.filter(todo => todo.completed == false)
         .map(todo => <TodoCoponent 
         todo={todo} 
         author = {this.state.authors.filter(authors => authors.id == todo.userId)
-        .map(authors => authors.name)[0]}/>) 
+        .map(authors => authors.name).join()}/>) 
         }
         { this.state.value == 'Completed' && 
         this.state.todo.filter(todo => todo.completed == true)
         .map(todo => <TodoCoponent 
         todo={todo} 
         author = {this.state.authors.filter(authors => authors.id == todo.userId)
-        .map(authors => authors.name)[0]}/>)}
+        .map(authors => authors.name).join()}/>)}
         { this.state.value == 'All' && 
         this.state.todo
         .map(todo => <TodoCoponent 
         todo={todo} 
         author = {this.state.authors.filter(authors => authors.id == todo.userId)
-        .map(authors => authors.name)[0]}/>) }
+        .map(authors => authors.name).join()}/>) }
         {}
       </div>
     )
@@ -121,13 +127,13 @@ const App = () => (
   <div style={styles.app}>
     <h1>Todo List</h1>
     <h2>List of Todos:</h2>
-    <p>Requirements:</p>
+    {/* <p>Requirements:</p>
     <ul>
       <li>It diplays list of todos;</li>
       <li>It shows spinner while loading list;</li>
       <li>User is able to filter by All / Active / Compleated;</li>
       <li>Bonus: It displays name of the author, next to each task;</li>
-    </ul>
+    </ul> */}
     <Tabletodolist />
   </div>
 );
