@@ -36,7 +36,8 @@ class Tabletodolist extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      todo: []
+      todo: [],
+      showSpin: true
     };
   }
 
@@ -44,8 +45,8 @@ class Tabletodolist extends React.Component {
     axios
       .get(api.todos)
       .then(response => {
-        // handle success
-        this.setState({ todo: response.data });
+        // handle success 
+        this.setState({ todo: response.data, showSpin: false });
       })
       .catch(function(error) {
         // handle error
@@ -55,7 +56,12 @@ class Tabletodolist extends React.Component {
 
   render() {
     // console.log(this.state.todo);
-    return null;
+    return (
+      <div>
+        { this.state.showSpin ? <ReactLoading color="#111e6c" type="spin" /> : null }
+        {this.state.todo.map(todo => <TodoCoponent todo={todo}/>)}
+      </div>
+    )
   }
 }
 
@@ -70,7 +76,6 @@ const App = () => (
       <li>User is able to filter by All / Active / Compleated;</li>
       <li>Bonus: It displays name of the author, next to each task;</li>
     </ul>
-    <ReactLoading color="#111e6c" type="spin" />
     <Tabletodolist />
   </div>
 );
