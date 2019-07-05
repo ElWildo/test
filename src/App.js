@@ -10,12 +10,19 @@ const styles = {
   app: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'left',
+    width: '40rem'
   },
   headline:{
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    alignSelf: 'center',
   },
   span:{
     width: '20px'
@@ -23,9 +30,6 @@ const styles = {
 };
 
 class TodoCoponent extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   render() {
     //storing needed data and displaying it
@@ -82,6 +86,7 @@ class Tabletodolist extends React.Component {
   render() {
     return (
       <div>
+        <div style={styles.container}>
         <div style = {styles.headline}>
           <h1>Display Task:</h1>
           <span style = {styles.span} />
@@ -91,6 +96,8 @@ class Tabletodolist extends React.Component {
             <option value="All">All</option>
           </select>
         </div>
+        </div>
+        <div style={styles.container}>
         {/* checking if data is loaded or not */}
         { this.state.showSpin ? <ReactLoading color="#111e6c" type="spin" /> : null }
         {/* render only what option value requires 
@@ -98,26 +105,29 @@ class Tabletodolist extends React.Component {
         filter on todos for value
         map todos to return a todoComponent containing:
         todos.autor and a filtered author list (throug id) returning a joined array */}
-        { this.state.value == 'Active' &&
-        this.state.todo.filter(todo => todo.completed == false)
+        { this.state.value === 'Active' &&
+        this.state.todo.filter(todo => todo.completed === false)
         .map(todo => <TodoCoponent 
-        todo={todo} 
-        author = {this.state.authors.filter(authors => authors.id == todo.userId)
+        todo={todo}
+        key = {todo.id}
+        author = {this.state.authors.filter(authors => authors.id === todo.userId)
         .map(authors => authors.name).join()}/>) 
         }
-        { this.state.value == 'Completed' && 
-        this.state.todo.filter(todo => todo.completed == true)
+        { this.state.value === 'Completed' && 
+        this.state.todo.filter(todo => todo.completed === true)
         .map(todo => <TodoCoponent 
         todo={todo} 
-        author = {this.state.authors.filter(authors => authors.id == todo.userId)
+        key = {todo.id}
+        author = {this.state.authors.filter(authors => authors.id === todo.userId)
         .map(authors => authors.name).join()}/>)}
-        { this.state.value == 'All' && 
+        { this.state.value === 'All' && 
         this.state.todo
         .map(todo => <TodoCoponent 
         todo={todo} 
-        author = {this.state.authors.filter(authors => authors.id == todo.userId)
+        key = {todo.id}
+        author = {this.state.authors.filter(authors => authors.id === todo.userId)
         .map(authors => authors.name).join()}/>) }
-        {}
+        </div>
       </div>
     )
   }
